@@ -1,24 +1,53 @@
-import React from "react";
-
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useState } from "react";
+import ListInput from "./ListInput.jsx";
+import ListItem from "./ListItem.jsx";
 
 //create your first component
 const Home = () => {
+	const [todos, setTodos] = useState([]);
+	const [task, setTask] = useState("");
+
+	const handleChange = (event) => {
+		setTask(event.target.value);
+		console.log(event);
+	};
+
+	const handleKeyPress = (event) => {
+		if (event.key === "Enter") {
+			setTodos([...todos, task]);
+			setTask("");
+		}
+	};
+	const removeTodo = (id) => {
+		const newTodos = todos.filter((item, index) => id != index);
+		setTodos(newTodos);
+	};
+
 	return (
-		<div>
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="d-flex flex-column justify-content-center align-items-center">
+			<p className="text-centered mt-5 mb-2 headertittle">Todos</p>
+			<div className="card">
+				<ul className="list-group list-group-flush">
+					<ListInput
+						task={task}
+						handleChange={handleChange}
+						handleKeyPress={handleKeyPress}
+						todos={todos}
+					/>
+
+					{todos.map((todo, index) => (
+						<ListItem
+							key={index}
+							todo={todo}
+							removeTodo={removeTodo}
+							id={index}
+						/>
+					))}
+					<li className="list-group-item text-muted small">
+						{todos.length} Items Left
+					</li>
+				</ul>
+			</div>
 		</div>
 	);
 };
